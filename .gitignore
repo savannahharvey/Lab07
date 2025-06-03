@@ -361,3 +361,32 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+
+# Xcode project files
+*.xcworkspace/
+*.xcuserdata/
+*.xcuserstate
+*.xcodeproj/
+
+# Build files
+build/
+DerivedData/
+
+# Temporary files
+*.moved-aside
+*.xcuserstate
+
+# macOS system files
+.DS_Store
+.AppleDouble
+
+# Icon files
+Icon?
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# Lock files
+*.lock
