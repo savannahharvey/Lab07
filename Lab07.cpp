@@ -28,12 +28,14 @@ public:
    Demo(Position ptUpperRight) :
       ptUpperRight(ptUpperRight)
    {
-      ptHubble.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-      ptHubble.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
+      ptHubble.setMetersX(0.0);
+      ptHubble.setMetersY(42164000.0);
+//      ptHubble.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
+//      ptHubble.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
 
       ptSputnik.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
       ptSputnik.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
-
+      
       ptStarlink.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
       ptStarlink.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
 
@@ -100,6 +102,12 @@ void callBack(const Interface* pUI, void* p)
    //
    // perform all the game logic
    //
+   
+   // calculate gravity
+   
+   // caluclate acceleration
+   
+   // update position
 
    // rotate the earth
    pDemo->angleEarth += 0.01;
