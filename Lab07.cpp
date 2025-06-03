@@ -15,6 +15,8 @@
 #include "uiInteract.h" // for INTERFACE
 #include "uiDraw.h"     // for RANDOM and DRAW*
 #include "position.h"      // for POINT
+#include "star.h"
+#include <vector>
 #include "test.h"
 using namespace std;
 
@@ -46,12 +48,20 @@ public:
       ptGPS.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
       ptGPS.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
 
-      ptStar.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-      ptStar.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
-
       angleShip = 0.0;
       angleEarth = 0.0;
       phaseStar = 0;
+
+      // Create 50 new stars with random positions
+      for (int i = 0; i < 50; i++)
+      {
+         ptStar.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
+         ptStar.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
+
+         Star newStar;
+         newStar.reset(ptStar);
+         starVect.push_back(newStar);
+      }
    }
 
    Position ptHubble;
@@ -67,6 +77,8 @@ public:
 
    double angleShip;
    double angleEarth;
+
+   vector<Star> starVect;
 };
 
 /*************************************
@@ -143,8 +155,12 @@ void callBack(const Interface* pUI, void* p)
    pt.setPixelsY(pDemo->ptShip.getPixelsY() + 20);
    gout.drawFragment(pt, pDemo->angleShip);
 
-   // draw a single star
-   gout.drawStar(pDemo->ptStar, pDemo->phaseStar);
+   //// draw a single star
+   //gout.drawStar(pDemo->ptStar, pDemo->phaseStar);
+
+   // draw a star
+   for (int i = 0; i < 50; i++)
+      pDemo->starVect[i].draw(gout);
 
    // draw the earth
    pt.setMeters(0.0, 0.0);
