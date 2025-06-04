@@ -32,6 +32,8 @@ public:
    {
       ptHubble.setMetersX(0.0);
       ptHubble.setMetersY(42164000.0);
+      dxHubble = -3100;
+      dyHubble = 0.0;
 //      ptHubble.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
 //      ptHubble.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
 
@@ -67,6 +69,8 @@ public:
    }
 
    Position ptHubble;
+   double dxHubble;
+   double dyHubble;
    Position ptSputnik;
    Position ptStarlink;
    Position ptCrewDragon;
@@ -116,13 +120,34 @@ void callBack(const Interface* pUI, void* p)
    //
    
    // calculate gravity
-   
-   // caluclate acceleration
+   // h = sqrt ((x*x) + (y*y)) - 6,378,000    // height from earth
+   // gh = g * ( r / r + h ) * ( r / r + h )  // acceleration from gravity from earth
+   // angle = atan(0 - x, 0 - y)              // direction of gravity pull
+   // ddx = gh * sin(angle)                   // horizontal comp of accel from gravity
+   // ddy = gh * cos(angle)                   // vertical comp of accel from gravity
+
+
+   // calculate rotation
+   // td = hoursDay x minutesHour
+   // tpf = td / frameRate
+   // r = -(2 * PI / frameRate) * (td / secondsDay)
    
    // update position
+   // s = s0 + v t                     // constant velocity
+   //	x = x + (v * t) + (a/2 * t * t)  // horizontal distance formula
+   //	y = y + (v * t) + (a/2 * t * t)  // vertical distance formula
+   // x = x + dx t                   // horizontal comp of const velocity
+   // y = y + dy t                   // vertical comp of const velocity
+
+   // v = v0 + a t                     // velocity with const accel
+   // dx = dx + ddx * t
+   // dy = dy + ddy * t
+
+   double t = 1.6;
+   //pDemo->dxHubble = pDemo->dxHubble + ddx * t;
 
    // rotate the earth
-   pDemo->angleEarth += 0.01;
+   pDemo->angleEarth += -0.005;
    pDemo->angleShip += 0.02;
    pDemo->phaseStar++;
 
