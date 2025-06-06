@@ -123,11 +123,12 @@ void callBack(const Interface* pUI, void* p)
    
    double x = pDemo->ptHubble.getMetersX();
    double y = pDemo->ptHubble.getMetersY();
-   double height = phys.calcHeight(x, y);
+   //double height = phys.calcHeight(x, y);
+   double height = 35786000.0;
    double t = 48;
    
    // get the angle
-//   Angle a = phys.calcGravityDirection(x, y);
+   Angle a = phys.calcGravityDirection(x, y);
    // set gravity
    Acceleration gravity( phys.calcGravity(height, phys.calcGravityDirection(x, y)) );
 
@@ -151,8 +152,8 @@ void callBack(const Interface* pUI, void* p)
    pDemo->ptHubble.setMetersY(y);
 
    // rotate the earth
-   pDemo->angleEarth += -0.005;
-   pDemo->angleShip += 0.02;
+   pDemo->angleEarth += -0.004;
+   pDemo->angleShip += -0.004;
    pDemo->phaseStar++;
 
    //

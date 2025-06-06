@@ -57,6 +57,21 @@ Angle Physics::calcGravityDirection(int x, int y)
  ************************************/
 double Physics::calcHeight(double x, double y)
 {
-   double height = sqrt((x * x) + (y * y));
+   double height = (sqrt((x * x) + (y * y))) - 6378000;
    return height;
+}
+
+/************************************
+ * PHYSICS : CALC VELOCITY
+ * v = v * at
+ ************************************/
+Velocity Physics::calcVelocity(Angle a, Acceleration accel)
+{
+	Velocity v;
+
+	double constantDX = -3100 * (accel.getDDX() * 48);
+	double constantDY = -3100 * (accel.getDDY() * 48);
+
+	v.set(a, -3100);
+	return v;
 }
