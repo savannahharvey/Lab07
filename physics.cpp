@@ -44,7 +44,7 @@ Angle Physics::calcGravityDirection(int x, int y)
 {
 	Angle gravityDirection;
 
-	double d = atan2(0.0 - y, 0.0 - x); // x and y are switched
+	double d = atan2(0.0 - x, 0.0 - y); // x and y are switched
 
 	gravityDirection.setRadians(d);
 
@@ -55,7 +55,8 @@ Angle Physics::calcGravityDirection(int x, int y)
  * PHYSICS : CALC HEIGHT FROM EARTH
  * c^2 = a^2 + b^2
  ************************************/
-double Physics::calcHeight(int x, int y)
+double Physics::calcHeight(double x, double y)
 {
-	return sqrt((x * x) + (y * y));
+   double height = sqrt((x * x) + (y * y));
+   return height;
 }

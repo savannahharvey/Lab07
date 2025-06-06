@@ -14,6 +14,9 @@
 #include <cassert>      // for ASSERT
 #include "uiInteract.h" // for INTERFACE
 #include "uiDraw.h"     // for RANDOM and DRAW*
+#include "acceleration.h"
+#include "angle.h"
+#include "physics.h"
 #include "position.h"      // for POINT
 #include "star.h"
 #include <vector>
@@ -32,10 +35,8 @@ public:
    {
       ptHubble.setMetersX(0.0);
       ptHubble.setMetersY(42164000.0);
-      dxHubble = -3100;
+      dxHubble = -3100.0;
       dyHubble = 0.0;
-//      ptHubble.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-//      ptHubble.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
 
       ptSputnik.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
       ptSputnik.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
@@ -118,33 +119,36 @@ void callBack(const Interface* pUI, void* p)
    //
    // perform all the game logic
    //
+   Physics phys;
    
-   // calculate gravity
-   // h = sqrt ((x*x) + (y*y)) - 6,378,000    // height from earth
-   // gh = g * ( r / r + h ) * ( r / r + h )  // acceleration from gravity from earth
-   // angle = atan(0 - x, 0 - y)              // direction of gravity pull
-   // ddx = gh * sin(angle)                   // horizontal comp of accel from gravity
-   // ddy = gh * cos(angle)                   // vertical comp of accel from gravity
-
-
-   // calculate rotation
-   // td = hoursDay x minutesHour
-   // tpf = td / frameRate
-   // r = -(2 * PI / frameRate) * (td / secondsDay)
+   double x = pDemo->ptHubble.getMetersX();
+   double y = pDemo->ptHubble.getMetersY();
+   double height = phys.calcHeight(x, y);
+   double t = 48;
    
-   // update position
-   // s = s0 + v t                     // constant velocity
-   //	x = x + (v * t) + (a/2 * t * t)  // horizontal distance formula
-   //	y = y + (v * t) + (a/2 * t * t)  // vertical distance formula
-   // x = x + dx t                   // horizontal comp of const velocity
-   // y = y + dy t                   // vertical comp of const velocity
+   // get the angle
+//   Angle a = phys.calcGravityDirection(x, y);
+   // set gravity
+   Acceleration gravity( phys.calcGravity(height, phys.calcGravityDirection(x, y)) );
 
-   // v = v0 + a t                     // velocity with const accel
+   // update velocity
    // dx = dx + ddx * t
    // dy = dy + ddy * t
-
-   double t = 1.6;
-   //pDemo->dxHubble = pDemo->dxHubble + ddx * t;
+   pDemo->dxHubble = pDemo->dxHubble + (gravity.getDDX() * t);
+   pDemo->dyHubble = pDemo->dyHubble + (gravity.getDDY() * t);
+   
+   // update position
+   //   x = x + (v * t) + (a/2 * t * t)  // horizontal distance formula
+   //   y = y + (v * t) + (a/2 * t * t)  // vertical distance formula
+   x = pDemo->ptHubble.getMetersX() + (pDemo->dxHubble * t) + ((gravity.getDDX()/2) * t * t);
+   y = pDemo->ptHubble.getMetersY() + (pDemo->dyHubble * t) + ((gravity.getDDY()/2) * t * t);
+   
+   // set position
+   
+//   pDemo->ptHubble.addMetersX((pDemo->dxHubble * t) + ((gravity.getDDX()/2) * t * t));
+//   pDemo->ptHubble.addMetersY((pDemo->dyHubble * t) + ((gravity.getDDY()/2) * t * t));
+   pDemo->ptHubble.setMetersX(x);
+   pDemo->ptHubble.setMetersY(y);
 
    // rotate the earth
    pDemo->angleEarth += -0.005;
@@ -158,35 +162,36 @@ void callBack(const Interface* pUI, void* p)
    Position pt;
    ogstream gout(pt);
 
+   gout.drawEarth(pt, pDemo->angleEarth);
    // draw satellites
-   gout.drawCrewDragon(pDemo->ptCrewDragon, pDemo->angleShip);
+//   gout.drawCrewDragon(pDemo->ptCrewDragon, pDemo->angleShip);
    gout.drawHubble    (pDemo->ptHubble,     pDemo->angleShip);
-   gout.drawSputnik   (pDemo->ptSputnik,    pDemo->angleShip);
-   gout.drawStarlink  (pDemo->ptStarlink,   pDemo->angleShip);
-   gout.drawShip      (pDemo->ptShip,       pDemo->angleShip, pUI->isSpace());
-   gout.drawGPS       (pDemo->ptGPS,        pDemo->angleShip);
+//   gout.drawSputnik   (pDemo->ptSputnik,    pDemo->angleShip);
+//   gout.drawStarlink  (pDemo->ptStarlink,   pDemo->angleShip);
+//   gout.drawShip      (pDemo->ptShip,       pDemo->angleShip, pUI->isSpace());
+//   gout.drawGPS       (pDemo->ptGPS,        pDemo->angleShip);
 
    // draw parts
-   pt.setPixelsX(pDemo->ptCrewDragon.getPixelsX() + 20);
-   pt.setPixelsY(pDemo->ptCrewDragon.getPixelsY() + 20);
-   gout.drawCrewDragonRight(pt, pDemo->angleShip); // notice only two parameters are set
-   pt.setPixelsX(pDemo->ptHubble.getPixelsX() + 20);
-   pt.setPixelsY(pDemo->ptHubble.getPixelsY() + 20);
-   gout.drawHubbleLeft(pt, pDemo->angleShip);      // notice only two parameters are set
-   pt.setPixelsX(pDemo->ptGPS.getPixelsX() + 20);
-   pt.setPixelsY(pDemo->ptGPS.getPixelsY() + 20);
-   gout.drawGPSCenter(pt, pDemo->angleShip);       // notice only two parameters are set
-   pt.setPixelsX(pDemo->ptStarlink.getPixelsX() + 20);
-   pt.setPixelsY(pDemo->ptStarlink.getPixelsY() + 20);
-   gout.drawStarlinkArray(pt, pDemo->angleShip);   // notice only two parameters are set
+//   pt.setPixelsX(pDemo->ptCrewDragon.getPixelsX() + 20);
+//   pt.setPixelsY(pDemo->ptCrewDragon.getPixelsY() + 20);
+//   gout.drawCrewDragonRight(pt, pDemo->angleShip); // notice only two parameters are set
+//   pt.setPixelsX(pDemo->ptHubble.getPixelsX() + 20);
+//   pt.setPixelsY(pDemo->ptHubble.getPixelsY() + 20);
+//   gout.drawHubbleLeft(pt, pDemo->angleShip);      // notice only two parameters are set
+//   pt.setPixelsX(pDemo->ptGPS.getPixelsX() + 20);
+//   pt.setPixelsY(pDemo->ptGPS.getPixelsY() + 20);
+//   gout.drawGPSCenter(pt, pDemo->angleShip);       // notice only two parameters are set
+//   pt.setPixelsX(pDemo->ptStarlink.getPixelsX() + 20);
+//   pt.setPixelsY(pDemo->ptStarlink.getPixelsY() + 20);
+//   gout.drawStarlinkArray(pt, pDemo->angleShip);   // notice only two parameters are set
 
    // draw fragments
-   pt.setPixelsX(pDemo->ptSputnik.getPixelsX() + 20);
-   pt.setPixelsY(pDemo->ptSputnik.getPixelsY() + 20);
-   gout.drawFragment(pt, pDemo->angleShip);
-   pt.setPixelsX(pDemo->ptShip.getPixelsX() + 20);
-   pt.setPixelsY(pDemo->ptShip.getPixelsY() + 20);
-   gout.drawFragment(pt, pDemo->angleShip);
+//   pt.setPixelsX(pDemo->ptSputnik.getPixelsX() + 20);
+//   pt.setPixelsY(pDemo->ptSputnik.getPixelsY() + 20);
+//   gout.drawFragment(pt, pDemo->angleShip);
+//   pt.setPixelsX(pDemo->ptShip.getPixelsX() + 20);
+//   pt.setPixelsY(pDemo->ptShip.getPixelsY() + 20);
+//   gout.drawFragment(pt, pDemo->angleShip);
 
    //// draw a single star
    //gout.drawStar(pDemo->ptStar, pDemo->phaseStar);
@@ -197,7 +202,7 @@ void callBack(const Interface* pUI, void* p)
 
    // draw the earth
    pt.setMeters(0.0, 0.0);
-   gout.drawEarth(pt, pDemo->angleEarth);
+//   gout.drawEarth(pt, pDemo->angleEarth);
 }
 
 double Position::metersFromPixels = 40.0;

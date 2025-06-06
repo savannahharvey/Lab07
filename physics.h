@@ -24,5 +24,5 @@ public:
 	//double pythagoreanTheorem(double a, double b); // only if we need it
 	Acceleration calcGravity(double height, Angle a);
 	Angle calcGravityDirection(int x, int y);
-	double calcHeight(int x, int y);
+	double calcHeight(double x, double y);
 };

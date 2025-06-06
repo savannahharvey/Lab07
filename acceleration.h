@@ -38,6 +38,7 @@ public:
    // constructors
    Acceleration() : ddx(0.0), ddy(0.0) {}
    Acceleration(double ddx, double ddy) : ddx(ddx), ddy(ddy) {}
+   Acceleration(const Acceleration &rhs) : ddx(rhs.ddx), ddy(rhs.ddy) {}
 
 
    // getters
