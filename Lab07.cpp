@@ -128,15 +128,10 @@ void callBack(const Interface* pUI, void* p)
    double t = 48;
    
    // get the angle
-   Angle a = phys.calcGravityDirection(x, y);
+//   Angle a = phys.calcGravityDirection(x, y);
    // set gravity
    Acceleration gravity( phys.calcGravity(height, phys.calcGravityDirection(x, y)) );
 
-   // update velocity
-   // dx = dx + ddx * t
-   // dy = dy + ddy * t
-   pDemo->dxHubble = pDemo->dxHubble + (gravity.getDDX() * t);
-   pDemo->dyHubble = pDemo->dyHubble + (gravity.getDDY() * t);
    
    // update position
    //   x = x + (v * t) + (a/2 * t * t)  // horizontal distance formula
@@ -150,6 +145,12 @@ void callBack(const Interface* pUI, void* p)
 //   pDemo->ptHubble.addMetersY((pDemo->dyHubble * t) + ((gravity.getDDY()/2) * t * t));
    pDemo->ptHubble.setMetersX(x);
    pDemo->ptHubble.setMetersY(y);
+   
+   // update velocity
+   // dx = dx + ddx * t
+   // dy = dy + ddy * t
+   pDemo->dxHubble = pDemo->dxHubble + (gravity.getDDX() * t);
+   pDemo->dyHubble = pDemo->dyHubble + (gravity.getDDY() * t);
 
    // rotate the earth
    pDemo->angleEarth += -0.004;
