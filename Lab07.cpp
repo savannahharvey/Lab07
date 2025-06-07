@@ -6,9 +6,11 @@
  * 3. Assignment Description:
  *      Simulate satellites orbiting the earth
  * 4. What was the hardest part? Be as specific as possible.
- *      ??
+ *      I did the math in the wrong order at one point. I was updating velocity before I moved position
+ *      It was hard to find this bug, but we took a break from the code for a while and then I noticed it
+ *      while i was reading the assignment of canvas.
  * 5. How long did it take for you to complete the assignment?
- *      ??
+ *      not very long, probably about 3-4 hours for both of us.
  *****************************************************************/
 
 #include <cassert>      // for ASSERT
@@ -30,28 +32,17 @@ using namespace std;
 class Demo
 {
 public:
-   Demo(Position ptUpperRight) :
-      ptUpperRight(ptUpperRight)
+   Demo(Position ptUpperRight) : ptUpperRight(ptUpperRight)
    {
+      // We are doing hubble, set initial position and velocity
       ptHubble.setMetersX(0.0);
       ptHubble.setMetersY(42164000.0);
       dxHubble = -3100.0;
       dyHubble = 0.0;
-
-      ptSputnik.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-      ptSputnik.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
       
-      ptStarlink.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-      ptStarlink.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
-
-      ptCrewDragon.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-      ptCrewDragon.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
-
-      ptShip.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-      ptShip.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
-
-      ptGPS.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
-      ptGPS.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
+      // put the ship at (0,0) to point at hubble.
+      ptShip.setMetersX(0);
+      ptShip.setMetersY(0);
 
       angleShip = 0.0;
       angleEarth = 0.0;
@@ -72,16 +63,11 @@ public:
    Position ptHubble;
    double dxHubble;
    double dyHubble;
-   Position ptSputnik;
-   Position ptStarlink;
-   Position ptCrewDragon;
    Position ptShip;
-   Position ptGPS;
    Position ptStar;
    Position ptUpperRight;
 
    unsigned char phaseStar;
-
    double angleShip;
    double angleEarth;
 
@@ -120,29 +106,21 @@ void callBack(const Interface* pUI, void* p)
    // perform all the game logic
    //
    Physics phys;
-   
+   // position
    double x = pDemo->ptHubble.getMetersX();
    double y = pDemo->ptHubble.getMetersY();
-   //double height = phys.calcHeight(x, y);
-   double height = 35786000.0;
+   double height = phys.calcHeight(x, y); // should be 35786000.0;
    double t = 48;
    
-   // get the angle
-//   Angle a = phys.calcGravityDirection(x, y);
    // set gravity
    Acceleration gravity( phys.calcGravity(height, phys.calcGravityDirection(x, y)) );
 
-   
    // update position
-   //   x = x + (v * t) + (a/2 * t * t)  // horizontal distance formula
-   //   y = y + (v * t) + (a/2 * t * t)  // vertical distance formula
+   //   d = d0 + (v * t) + (a/2 * t * t) - distance formula, d = distance, d0 is starting point.
    x = pDemo->ptHubble.getMetersX() + (pDemo->dxHubble * t) + ((gravity.getDDX()/2) * t * t);
    y = pDemo->ptHubble.getMetersY() + (pDemo->dyHubble * t) + ((gravity.getDDY()/2) * t * t);
    
    // set position
-   
-//   pDemo->ptHubble.addMetersX((pDemo->dxHubble * t) + ((gravity.getDDX()/2) * t * t));
-//   pDemo->ptHubble.addMetersY((pDemo->dyHubble * t) + ((gravity.getDDY()/2) * t * t));
    pDemo->ptHubble.setMetersX(x);
    pDemo->ptHubble.setMetersY(y);
    
@@ -153,8 +131,11 @@ void callBack(const Interface* pUI, void* p)
    pDemo->dyHubble = pDemo->dyHubble + (gravity.getDDY() * t);
 
    // rotate the earth
-   pDemo->angleEarth += -0.004;
-   pDemo->angleShip += -0.004;
+   double td = 24 * 60;
+   double rotationSpeed = -(2 * M_PI / 30) * (td / 86400 ); // should be 0.00349
+   
+   pDemo->angleEarth += rotationSpeed;
+   pDemo->angleShip += rotationSpeed;
    pDemo->phaseStar++;
 
    //
@@ -163,48 +144,19 @@ void callBack(const Interface* pUI, void* p)
 
    Position pt;
    ogstream gout(pt);
-
+   
+   // draw the earth
    gout.drawEarth(pt, pDemo->angleEarth);
+   
    // draw satellites
-//   gout.drawCrewDragon(pDemo->ptCrewDragon, pDemo->angleShip);
    gout.drawHubble    (pDemo->ptHubble,     pDemo->angleShip);
-//   gout.drawSputnik   (pDemo->ptSputnik,    pDemo->angleShip);
-//   gout.drawStarlink  (pDemo->ptStarlink,   pDemo->angleShip);
-//   gout.drawShip      (pDemo->ptShip,       pDemo->angleShip, pUI->isSpace());
-//   gout.drawGPS       (pDemo->ptGPS,        pDemo->angleShip);
+   gout.drawShip      (pDemo->ptShip,       pDemo->angleShip, pUI->isSpace());
 
-   // draw parts
-//   pt.setPixelsX(pDemo->ptCrewDragon.getPixelsX() + 20);
-//   pt.setPixelsY(pDemo->ptCrewDragon.getPixelsY() + 20);
-//   gout.drawCrewDragonRight(pt, pDemo->angleShip); // notice only two parameters are set
-//   pt.setPixelsX(pDemo->ptHubble.getPixelsX() + 20);
-//   pt.setPixelsY(pDemo->ptHubble.getPixelsY() + 20);
-//   gout.drawHubbleLeft(pt, pDemo->angleShip);      // notice only two parameters are set
-//   pt.setPixelsX(pDemo->ptGPS.getPixelsX() + 20);
-//   pt.setPixelsY(pDemo->ptGPS.getPixelsY() + 20);
-//   gout.drawGPSCenter(pt, pDemo->angleShip);       // notice only two parameters are set
-//   pt.setPixelsX(pDemo->ptStarlink.getPixelsX() + 20);
-//   pt.setPixelsY(pDemo->ptStarlink.getPixelsY() + 20);
-//   gout.drawStarlinkArray(pt, pDemo->angleShip);   // notice only two parameters are set
-
-   // draw fragments
-//   pt.setPixelsX(pDemo->ptSputnik.getPixelsX() + 20);
-//   pt.setPixelsY(pDemo->ptSputnik.getPixelsY() + 20);
-//   gout.drawFragment(pt, pDemo->angleShip);
-//   pt.setPixelsX(pDemo->ptShip.getPixelsX() + 20);
-//   pt.setPixelsY(pDemo->ptShip.getPixelsY() + 20);
-//   gout.drawFragment(pt, pDemo->angleShip);
-
-   //// draw a single star
-   //gout.drawStar(pDemo->ptStar, pDemo->phaseStar);
-
-   // draw a star
+   // draw the stars
    for (int i = 0; i < 50; i++)
       pDemo->starVect[i].draw(gout);
 
-   // draw the earth
    pt.setMeters(0.0, 0.0);
-//   gout.drawEarth(pt, pDemo->angleEarth);
 }
 
 double Position::metersFromPixels = 40.0;

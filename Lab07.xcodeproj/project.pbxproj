@@ -10,7 +10,6 @@
 		4314705B2DF37A8400EF065C /* acceleration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 431470542DF37A8400EF065C /* acceleration.cpp */; };
 		4314705C2DF37A8400EF065C /* angle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 431470562DF37A8400EF065C /* angle.cpp */; };
 		4314705D2DF37A8400EF065C /* physics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 431470582DF37A8400EF065C /* physics.cpp */; };
-		439812FE2DF3B78A00F3116D /* velocity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 439812FD2DF3B78A00F3116D /* velocity.cpp */; };
 		C11C7EA425780B2100EA4B2E /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C11C7EA225780B2100EA4B2E /* GLUT.framework */; };
 		C11C7EA525780B2100EA4B2E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C11C7EA325780B2100EA4B2E /* OpenGL.framework */; };
 		C11C7EB125780B6500EA4B2E /* Lab07.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C11C7EA625780B5C00EA4B2E /* Lab07.cpp */; };
@@ -41,8 +40,6 @@
 		431470582DF37A8400EF065C /* physics.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = physics.cpp; sourceTree = "<group>"; };
 		431470592DF37A8400EF065C /* star.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = star.h; sourceTree = "<group>"; };
 		4314705A2DF37A8400EF065C /* testPhysics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = testPhysics.h; sourceTree = "<group>"; };
-		4314705E2DF3B6D900EF065C /* velocity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = velocity.h; sourceTree = "<group>"; };
-		439812FD2DF3B78A00F3116D /* velocity.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = velocity.cpp; sourceTree = "<group>"; };
 		C11C7E962578098A00EA4B2E /* Lab07 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Lab07; sourceTree = BUILT_PRODUCTS_DIR; };
 		C11C7EA225780B2100EA4B2E /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		C11C7EA325780B2100EA4B2E /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -94,8 +91,6 @@
 				C11C7EA825780B5C00EA4B2E /* uiInteract.h */,
 				C11C7EA925780B5E00EA4B2E /* uiInteract.cpp */,
 				C1FC37B62C221C36000A76B0 /* unitTest.h */,
-				4314705E2DF3B6D900EF065C /* velocity.h */,
-				439812FD2DF3B78A00F3116D /* velocity.cpp */,
 				C11C7E972578098A00EA4B2E /* Products */,
 				C11C7EA125780B2000EA4B2E /* Frameworks */,
 			);
@@ -181,7 +176,6 @@
 				4314705C2DF37A8400EF065C /* angle.cpp in Sources */,
 				4314705D2DF37A8400EF065C /* physics.cpp in Sources */,
 				C11C7EB325780B6500EA4B2E /* uiInteract.cpp in Sources */,
-				439812FE2DF3B78A00F3116D /* velocity.cpp in Sources */,
 				C179C6C127E375AF00E3E514 /* position.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
